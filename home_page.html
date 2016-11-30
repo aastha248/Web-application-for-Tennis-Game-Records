@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>Ausopen Matches 2011</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#display").click(function () {
+            $("#display").hide();
+            var add_header = '<tr style = "border: 1px black solid" ><td style = "border: 1px black solid" > Row_num </td>';
+            $.get("/api/db_data", function (data) {
+                $.each(new Array(179), function (i){
+                    iteration(i, data[i].match_num)
+                })
+            })
+            function iteration(i, value) {
+                setTimeout(function () {
+                    var rownum = i + 1;
+                    var add_row = '<tr style = "border: 1px black solid" ><td style = "border: 1px black solid" >' + rownum + '</td>';
+                    $.get("/api/db_data/" + value, function (data) {
+                        $.each(data, function (key, value) {
+                            add_row = add_row + '<td style = "border: 1px black solid">' + value + '</td>'
+                            if (i == 0)
+                                add_header = add_header + '<td style = "border: 1px black solid">' + key + '</td>';
+                        })
+
+                        if (i == 0) {
+                            add_header = add_header + '</tr>'
+                            $("#data_list").append(add_header);
+                        }
+                        add_row = add_row + '</tr>'
+                        $("#data_list").append(add_row);
+
+                        var rowCount = $('#data_list tr').length-1;
+                        $("#data_list tr:eq(" + rowCount +")").hide()
+                        $("#data_list tr:eq(" + rowCount +")").fadeIn()
+                        if (rowCount+1 > 21)
+                            $("#data_list tr:eq(1)").remove();
+                        else
+                        {
+                            $('html, body').animate({
+                                scrollTop: ($('#page_footer').offset().top)
+                            },0);
+                        }
+                        console.log("i" +i)
+                        if(i == 178)
+                        {
+                            console.log("if running")
+                            $("#display").show()
+                        }
+
+                    })
+                }, 500*i)
+            }
+        })
+    })
+
+</script>
+<h1 align="center">Ausopen Matches 2011</h1>
+<div align="center" style="margin-bottom: 20px">
+    <button type="button" id="display">executer</button>
+</div>
+
+<div id="table_div"><font size="2">
+    <table id="data_list" align="center" style = "border: 1px black solid">
+    </table></font>
+</div>
+<div id="page_footer"></div>
+
+</body>
+</html>
