@@ -46,11 +46,8 @@ app.get('/api/db_data', function(req, res){
 })
 
 app.get('/api/db_data/:match_num', function(req, res){
-    console.log("sds : " + req.params.match_num)
     collection.findOne({match_num: req.params.match_num},{"_id" : 0},function(err, data){
         res.json(data);
     })
 })
-app.listen(port);/**
- * Created by Aastha on 11/29/2016.
- */
+app.listen(port);
